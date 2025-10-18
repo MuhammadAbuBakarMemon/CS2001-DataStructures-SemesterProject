@@ -1,7 +1,10 @@
 #include "interaction/message.hpp"
 
+unsigned long long Message::nextMID = 1;
+
 Message::Message()
     : m_id(nextMID++), timeStamp(std::time(nullptr)), isRead(false) {}
+
 Message::Message(const std::string &s, const std::string &r, const std::string &t)
     : m_id(nextMID++), sender(s), reciever(r), text(t), timeStamp(std::time(nullptr)), isRead(false) {}
 
@@ -58,3 +61,5 @@ std::string Message::format() const
 }
 
 bool Message::operator==(const Message &other) const { return this->m_id == other.m_id; }
+
+// Message System class defination
