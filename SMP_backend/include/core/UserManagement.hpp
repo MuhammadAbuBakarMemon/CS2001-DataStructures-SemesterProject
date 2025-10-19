@@ -1,9 +1,7 @@
-#ifndef USER_MANAGEMENT_HPP
-#define USER_MANAGEMENT_HPP
+#pragma once
 
 #include <iostream>
 #include <string>
-
 using namespace std;
 
 // =========================================================
@@ -50,5 +48,3 @@ public:
     void displayAllUsers() const;
     void displayUserProfile(const string& username) const;
 };
-
-#endif 
