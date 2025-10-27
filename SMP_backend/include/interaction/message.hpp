@@ -3,8 +3,10 @@
 #include <string>
 #include <ctime>
 #include <vector>
-#include <unordered_map>
+#include "ADT/hash_map.hpp"
+#include "ADT/queue.hpp"
 #include "nlohmann/json.hpp"
+#include "core/user.hpp"
 
 using json = nlohmann::json;
 
@@ -33,9 +35,9 @@ public:
     bool getIsRead() const;
 
     void setID(unsigned long long newID);
-    void setSender(std::string &s);
-    void setReciever(std::string &r);
-    void setText(std::string &t);
+    void setSender(const std::string &s);
+    void setReciever(const std::string &r);
+    void setText(const std::string &t);
     void setTimeStamp(std::time_t ts);
     void setIsRead(bool ir);
 
@@ -52,27 +54,33 @@ public:
 class MessageSystem
 {
 private:
-    std::unordered_map<unsigned long long, std::vector<Message>> inbox;
-    std::unordered_map<unsigned long long, std::vector<Message>> sent;
-    // std::unordered_map<unsigned long long, User*> users;
+    HashMap<std::string, Queue<Message>> chat;
+    HashMap<unsigned long long, User *> users;
 
     std::string filePath;
 
+    std::string makeKey(unsigned long long a, unsigned long long b) const
+    {
+        return (a < b) ? std::to_string(a) + "_" + std::to_string(b)
+                       : std::to_string(b) + "_" + std::to_string(a);
+    }
+
 public:
-    MessageSystem(const std::string &path = "../data/message.json");
+    MessageSystem(const std::string &path);
 
-    // void registerUser(User *user);
+    void registerUser(User *user);
 
-    // void sendMessage(const User &sender, const User &reciever, const std::string &text);
+    void sendMessage(const User &sender, const User &reciever, const std::string &text);
 
-    // std::vector<Message> getInbox(const User &user) const;
-    // std::vector<Message> getSent(const User &user) const;
+    std::vector<Message> getChatHistory(const User &u1, const User &u2) const;
 
-    // bool markMessageRead(const User &user, unsigned long long messageID);
+    bool markMessageRead(const User &user, unsigned long long messageID);
+
+    Message getLastestMessage(const User &u1, const User &u2) const;
 
     bool loadFromFile();
     bool saveToFile() const;
 
-    // std::vector<Message> searchMessages(const User &user, const std::string &keyword) const;
+    std::vector<Message> searchMessages(const User &user, const std::string &keyword) const;
     void clear();
 };
