@@ -53,5 +53,44 @@ public:
 class NotificationManager
 {
 private:
+    Notification **list;
+    unsigned long long cap, count;
+    struct UnreadNode
+    {
+        Notification *data;
+        UnreadNode *next;
+    };
+    UnreadNode *head;
+
+    void expand();
+    void addToUnread(Notification *n);
+    void removeFromUnread(Notification *n);
+
+    NotificationManager(const NotificationManager &) = delete;
+    NotificationManager &operator=(const NotificationManager) = delete;
+
 public:
+    NotificationManager();
+    NotificationManager(unsigned long long initalCap);
+    ~NotificationManager();
+
+    void add(Notification *n);
+    Notification *create(unsigned long long recieverID, unsigned long long senderID, NotificationType type, const std::string &description);
+
+    Notification *getByID(unsigned long long nid) const;
+    Notification **getAll() const;
+    Notification **getUnread() const;
+    Notification **getByType(NotificationType t) const;
+
+    void markAllRead();
+    void markAsRead(unsigned long long nid);
+    bool removeByID(unsigned long long nid);
+
+    unsigned long long countUnread() const;
+
+    bool saveToFile(const std::string &filePath) const;
+    bool loadFromFile(const std::string &filePath);
+
+    bool empty() const;
+    unsigned long long size() const;
 };
