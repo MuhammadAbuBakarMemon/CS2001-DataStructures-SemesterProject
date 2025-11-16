@@ -225,5 +225,5 @@ std::vector<Message> MessageSystem::searchMessages(const User &user, const std::
 void MessageSystem::clear()
 {
     chat.clear();
-    users.clear(); 
+    users.clear();
 }

@@ -104,12 +104,12 @@ Notification Notification::fromJSON(const json &j)
 
 // Notification Manager class defination
 
-NotificationManager::NotificationManager() : cap(10), count(0), head(nullptr)
+NotificationManager::NotificationManager(const std::string &fp) : cap(10), count(0), head(nullptr), filePath(fp)
 {
     list = new Notification *[cap];
 }
 
-NotificationManager::NotificationManager(unsigned long long initalCap) : cap(initalCap), count(0), head(nullptr)
+NotificationManager::NotificationManager(const std::string &fp, unsigned long long initalCap) : cap(initalCap), count(0), head(nullptr), filePath(fp)
 {
     if (cap == 0)
     {
@@ -340,7 +340,7 @@ unsigned long long NotificationManager::countUnread() const
     return c;
 }
 
-bool NotificationManager::saveToFile(const std::string &filePath) const
+bool NotificationManager::saveToFile() const
 {
     std::ofstream out(filePath);
     if (!out.is_open())
@@ -363,7 +363,7 @@ bool NotificationManager::saveToFile(const std::string &filePath) const
     return true;
 }
 
-bool NotificationManager::loadFromFile(const std::string &filePath)
+bool NotificationManager::loadFromFile()
 {
     std::ifstream in(filePath);
     if (!in.is_open())

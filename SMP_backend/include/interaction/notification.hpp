@@ -62,6 +62,8 @@ private:
     };
     UnreadNode *head;
 
+    std::string filePath;
+
     void expand();
     void addToUnread(Notification *n);
     void removeFromUnread(Notification *n);
@@ -70,8 +72,8 @@ private:
     NotificationManager &operator=(const NotificationManager) = delete;
 
 public:
-    NotificationManager();
-    NotificationManager(unsigned long long initalCap);
+    NotificationManager(const std::string &filePath);
+    NotificationManager(const std::string &filePath, unsigned long long initalCap);
     ~NotificationManager();
 
     void add(Notification *n);
@@ -88,8 +90,8 @@ public:
 
     unsigned long long countUnread() const;
 
-    bool saveToFile(const std::string &filePath) const;
-    bool loadFromFile(const std::string &filePath);
+    bool saveToFile() const;
+    bool loadFromFile();
 
     bool empty() const;
     unsigned long long size() const;
