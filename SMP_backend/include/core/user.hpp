@@ -32,6 +32,8 @@ public:
     string getCity() const;
     string getStatus() const;
     User *getNext() const;
+    string getPassword() const;
+
 
     void setID(unsigned long long newID);
     void setUsername(const string &u);
@@ -40,15 +42,20 @@ public:
     void setStatus(const string &s);
     void setNext(User *n);
 
-    void verifyPassword(const string &input) const;
+    bool verifyPassword(const string &input) const; // set to bool so other class can check if required
 
     void display() const;
 };
 
 class UserManagement
 {
-private:
-    static const int TABLE_SIZE = 100;
+private: // size taken large as the platform is for social media
+          // we are using seprate chaining for hasing which is convineent, as user can increasse
+          // at abnormal rates thus latency can be high when alot of user try creating account 
+          // so open adressing wil l fail
+          //size could have been taken 31 like java's prebuilt but due to platform size 103 was 
+          //considered ideal
+    static const int TABLE_SIZE = 103; // setting prime number for efficient hashing 
     User *hashTable[TABLE_SIZE];
 
     // Hash function for username lookup
