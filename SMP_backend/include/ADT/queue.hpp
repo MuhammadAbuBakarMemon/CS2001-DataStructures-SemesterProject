@@ -4,29 +4,29 @@
 #include <vector>
 
 template <typename T>
-struct Node
+struct QueueNode
 {
     T data;
-    Node<T> *next;
-    Node<T> *prev;
+    QueueNode<T> *next;
+    QueueNode<T> *prev;
 
-    Node(const T &val) : data(val), next(nullptr), prev(nullptr) {}
+    QueueNode(const T &val) : data(val), next(nullptr), prev(nullptr) {}
 };
 
 template <typename T>
 class Queue
 {
 private:
-    Node<T> *m_front;
-    Node<T> *m_back;
-    m_size_t m_size;
+    QueueNode<T> *m_front;
+    QueueNode<T> *m_back;
+    size_t m_size;
 
     void clear()
     {
-        Node<T> *curr = m_front;
+        QueueNode<T> *curr = m_front;
         while (curr != nullptr)
         {
-            Node<T> *temp = curr;
+            QueueNode<T> *temp = curr;
             curr = curr->next;
             delete temp;
         }
@@ -40,7 +40,7 @@ public:
 
     Queue(const Queue<T> &other) : m_front(nullptr), m_back(nullptr), m_size(0)
     {
-        Node<T> *curr = other.m_front;
+        QueueNode<T> *curr = other.m_front;
         while (curr)
         {
             enqueue(curr->data);
@@ -53,7 +53,7 @@ public:
         if (this != &other)
         {
             clear();
-            Node<T> *curr = other.m_front;
+            QueueNode<T> *curr = other.m_front;
             while (curr)
             {
                 enqueue(curr->data);
@@ -64,11 +64,11 @@ public:
     }
 
     bool isEmpty() const { return m_size == 0; }
-    m_size_t m_size() const { return m_size; }
+    size_t size() const { return m_size; }
 
     void enqueue(const T &item)
     {
-        Node<T> *newNode = new Node<T>(item);
+        QueueNode<T> *newNode = new QueueNode<T>(item);
         if (isEmpty())
         {
             m_front = m_back = newNode;
@@ -82,17 +82,17 @@ public:
         m_size++;
     }
 
-    void dequeue() const
+    void dequeue()
     {
         if (isEmpty())
         {
             throw std::out_of_range("Dequeue called on empty queue.");
         }
-        Node<T> *temp = m_front;
+        QueueNode<T> *temp = m_front;
         m_front = m_front->next;
         if (m_front)
         {
-            m_m_front->prev = nullptr;
+            m_front->prev = nullptr;
         }
         else
         {
@@ -141,7 +141,7 @@ public:
     std::vector<T> toVector() const
     {
         std::vector<T> result;
-        Node<T> *curr = m_front;
+        QueueNode<T> *curr = m_front;
         while (curr != nullptr)
         {
             result.push_back(curr->data);
@@ -152,10 +152,10 @@ public:
 
     T *find(unsigned long long ID)
     {
-        Node<T> *curr = m_front;
+        QueueNode<T> *curr = m_front;
         while (curr)
         {
-            if (curr->data.getID() = ID)
+            if (curr->data.getID() == ID)
             {
                 return &(curr->data);
             }

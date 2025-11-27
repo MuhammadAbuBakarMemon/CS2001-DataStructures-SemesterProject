@@ -62,7 +62,6 @@ std::string Message::format() const
     return "[" + std::string(buff) + "] " + sender + " -> " + reciever + ": " + text;
 }
 
-bool Message::operator==(const Message &other) const { return this->m_id == other.m_id; }
 
 // Message System class defination
 
