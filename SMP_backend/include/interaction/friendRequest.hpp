@@ -2,6 +2,8 @@
 
 #include <string>
 #include <ctime>
+#include <vector>
+#include <fstream>
 #include "nlohmann/json.hpp"
 
 using json = nlohmann::json;
@@ -23,16 +25,15 @@ private:
 
     static std::string statusToString(RequestStatus st);
     static RequestStatus stringToType(const std::string &st);
+
 public:
     FriendRequest();
     FriendRequest(unsigned long long sid, unsigned long long rid);
-    ~FriendRequest();
 
     unsigned long long getRecieverID() const;
     unsigned long long getSenderID() const;
     RequestStatus getStatus() const;
     std::time_t getTimeStamp() const;
-
 
     void accept();
     void reject();
@@ -45,7 +46,7 @@ public:
 class FriendRequestManager
 {
 private:
-    std::vector<FriendRequest> outbox;
+        std::vector<FriendRequest> outbox;
     std::vector<FriendRequest> inbox;
 
     std::string filePath;
@@ -53,11 +54,11 @@ private:
 public:
     FriendRequestManager(const std::string &filePath);
 
-    void sendRequest(unsigned long long sid, unsigned long long rid);
+    bool sendRequest(unsigned long long sid, unsigned long long rid);
 
-    bool accept(unsigned long long sid);
-    bool reject(unsigned long long sid);
-    bool cancel(unsigned long long rid);
+    bool acceptRequest(unsigned long long sid);
+    bool rejectRequest(unsigned long long sid);
+    bool cancelRequest(unsigned long long rid);
 
     std::vector<FriendRequest> getInbox() const;
     std::vector<FriendRequest> getOutbox() const;

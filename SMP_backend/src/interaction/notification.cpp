@@ -113,8 +113,9 @@ NotificationManager::NotificationManager(const std::string &fp, unsigned long lo
 {
     if (cap == 0)
     {
-        list = new Notification *[cap];
+        cap = 1;
     }
+    list = new Notification *[cap];
 }
 
 NotificationManager::~NotificationManager()
@@ -152,13 +153,10 @@ void NotificationManager::expand()
 
 void NotificationManager::addToUnread(Notification *n)
 {
-    if (!head)
-    {
-        UnreadNode *node = new UnreadNode;
-        node->data = n;
-        node->next = head;
-        head = node;
-    }
+    UnreadNode *node = new UnreadNode;
+    node->data = n;
+    node->next = head;
+    head = node;
 }
 
 void NotificationManager::removeFromUnread(Notification *n)
@@ -251,7 +249,7 @@ Notification **NotificationManager::getByType(NotificationType t) const
         }
     }
 
-    return nullptr;
+    return arr;
 }
 
 Notification **NotificationManager::getUnread() const
