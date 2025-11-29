@@ -1,5 +1,4 @@
-#ifndef STATUS_MANAGER_HPP
-#define STATUS_MANAGER_HPP
+#pragma once
 
 #include <string>
 #include <ctime>
@@ -12,11 +11,11 @@ class UserManagement;
 class StatusManager {
 private:
     UserManagement* userTable;  // Reference to existing UserManagement
-
+    string status;
 public:
     StatusManager(UserManagement* table);
 
-    // Returns "Online", "Offline", "Inactive"
+    // Returns "Online", "Offline"
     string getStatus(const string& username);
 
     // Returns human-readable last login timestamp
@@ -32,5 +31,3 @@ public:
     bool isActive(const string& username, int minutesThreshold = 10); // online in last X minutes
     void printAllStatuses() const; // Print all users and their status
 };
-
-#endif

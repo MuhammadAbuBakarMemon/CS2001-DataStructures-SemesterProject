@@ -3,6 +3,7 @@
 #include "user.hpp"
 #include <iostream>
 #include <string>
+#include "status.hpp"
 using namespace std;
 
 unsigned long long User::nextUID = 10101;
@@ -67,6 +68,25 @@ void User::display() const
     printCyanCentered("Status: " + status);
     printCyanCentered("-----------------------------------");
 }
+
+ void User::setID(unsigned long long newID){
+    u_id = newID;
+ }
+    void User :: setUsername(const string &u){
+        username = u;
+    }
+    void User :: setPassword(const string &p){
+        password = p;
+    }
+    void User :: setCity(const string &c){
+        city = c;
+    }
+    void User :: setStatus(const string &s){
+        status = s;
+    }
+    void User :: setNext(User *n){
+        next = n;
+    }
 
 
 UserManagement :: UserManagement (){
@@ -135,56 +155,68 @@ bool UserManagement :: registerUser (const string &username, const string &passw
     
 }
 
-/////////////////////////////////////////////////////////////////////
-
-bool UserManagement::loginUser(const string &username, const string &password)
-{
+bool UserManagement :: loginUser (const string& username , const string& password){
     int index = hashFunction(username);
-    User *user = searchUserInList(hashTable[index], username);
-    if (!user) return false;
 
-    if (password == user->getPassword())
-    {
-        user->setStatus("online");
+    User* user = searchUserInList (hashTable[index],username);
+
+    if (!user)
+     return false;
+
+     else if (password == user -> getPassword() ){
+        user-> setStatus ("online");
+
+
+
         return true;
-    }
+     }
 
-    return false;
+     return false;
 }
 
-bool UserManagement::logoutUser(const string &username)
-{
-    int index = hashFunction(username);
-    User *user = searchUserInList(hashTable[index], username);
-    if (!user) return false;
+bool UserManagement :: logoutUser (const string& username ){
+    int index = hashFunction (username);
 
-    user->setStatus("offline");
+    User* user = searchUserInList(hashTable[index],username);
+
+    if (!user)
+        return false;
+
+    user -> setStatus ("offline");
+
     return true;
 }
 
-bool UserManagement::resetPassword(const string &username, const string &newPassword)
-{
-    int index = hashFunction(username);
-    User *user = searchUserInList(hashTable[index], username);
-    if (!user) return false;
+  bool UserManagement::resetPassword(const string &username, const string &newPassword){
 
-    user->setPassword(newPassword);
+    int index = hashFunction (username);
+
+    User* user = searchUserInList (hashTable[index] , username);
+
+    if (!user)
+        return false;
+
+    user -> setPassword (newPassword);
+
     return true;
-}
 
-void UserManagement::displayAllUsers() const
-{
-    for (int i = 0; i < TABLE_SIZE; i++)
-    {
-        User *curr = hashTable[i];
-        while (curr)
-        {
-            curr->display();
-            curr = curr->getNext();
-        }
+  }
+
+void UserManagement :: displayAllUsers () const{
+
+    User* curr;
+
+    for (int i =  0; i < TABLE_SIZE ; i++){
+      curr == hashTable[i];
+
+      while (curr){
+        curr -> display ();
+        curr = curr -> getNext();
+      }
     }
-}
 
+}
+/////////////////////////////////////////////////////////////////////////////////
 void UserManagement::displayUserProfile(const string &username) const
 {
     int index = hashFunction(username);
@@ -234,4 +266,16 @@ bool UserManagement::updateProfile(const string &username, const string newCity,
     user->setCity(newCity);
     user->setStatus(newStatus);
     return true;
+}
+
+string UserManagement :: getStatusforclass(const string& username)const{
+    int index = hashFunction(username);
+
+    User* user  =searchUserInList (hashTable[index] , username);
+
+    if (!user){
+        return "User Deleted Account";
+    }
+
+    return user -> getStatus();
 }

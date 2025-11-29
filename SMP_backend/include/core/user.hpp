@@ -2,6 +2,8 @@
 
 #include <iostream>
 #include <string>
+#include <ctime>
+
 using namespace std;
 
 // =========================================================
@@ -25,6 +27,9 @@ private:
     static unsigned long long nextUID;
 
 public:
+    time_t lastLoginTime;
+    time_t lastLogoutTime;
+
     User(const string &uname, const string &pwd, const string &cty);
 
     unsigned long long getID() const;
@@ -61,12 +66,15 @@ private: // size taken large as the platform is for social media
     // Hash function for username lookup
     // Converts username characters into a hash index
     int hashFunction(const string &username) const;
-
     User *searchUserInList(User *head, const string &username) const;
 
 public:
     UserManagement();
     ~UserManagement();
+
+    string getStatusforclass(const string& username)const;
+    User* search (const string& username)const;
+   
 
     bool registerUser(const string &username, const string &password, const string &city);
     bool loginUser(const string &username, const string &password);
