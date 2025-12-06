@@ -23,6 +23,7 @@ private:
     string city;
     string status;
     User *next;
+    FollowerSystem followerSystem;
 
     static unsigned long long nextUID;
 
@@ -86,4 +87,9 @@ public:
 
     bool deleteUser(const string &username);
     bool updateProfile(const string &username, const string newCity, const string newStatus);
+
+    //for grapgh
+    // Access follower system
+    FollowerSystem& getFollowerSystem() { return followerSystem; }
+
 };

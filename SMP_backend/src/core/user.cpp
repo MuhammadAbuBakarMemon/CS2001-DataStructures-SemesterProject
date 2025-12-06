@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include "status.hpp"
+#include "core/followerlist.hpp"
 using namespace std;
 
 unsigned long long User::nextUID = 10101;
@@ -279,3 +280,4 @@ string UserManagement :: getStatusforclass(const string& username)const{
 
     return user -> getStatus();
 }
+
