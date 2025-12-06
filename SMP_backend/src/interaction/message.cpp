@@ -88,7 +88,7 @@ std::vector<Message> MessageSystem::getChatHistory(const User &u1, const User &u
 
     if (it != chat.end())
     {
-        return (*it).second.toVector();
+        return (*it).value.toVector();
     }
     return {};
 }
@@ -97,7 +97,7 @@ bool MessageSystem::markMessageRead(const User &u, unsigned long long msgID)
 {
     for (auto it = chat.begin(); it != chat.end(); ++it)
     {
-        Message *msgPtr = (*it).second.find(msgID);
+        Message *msgPtr = (*it).value.find(msgID);
 
         if (msgPtr != nullptr && msgPtr->getReciever() == u.getUsername())
         {
@@ -113,12 +113,12 @@ Message MessageSystem::getLastestMessage(const User &u1, const User &u2) const
     std::string key = makeKey(u1.getID(), u2.getID());
     auto it = chat.find(key);
 
-    if (it == chat.end() || (*it).second.isEmpty())
+    if (it == chat.end() || (*it).value.isEmpty())
     {
         throw std::runtime_error("No Messages found in the Chat!");
     }
 
-    return (*it).second.back();
+    return (*it).value.back();
 }
 
 bool MessageSystem::loadFromFile()
@@ -174,14 +174,14 @@ bool MessageSystem::saveToFile() const
 
     for (auto it = chat.begin(); it != chat.end(); ++it)
     {
-        std::vector<Message> messages = (*it).second.toVector();
+        std::vector<Message> messages = (*it).value.toVector();
         json msgArr = json::array();
 
         for (const auto &msg : messages)
         {
             msgArr.push_back(msg.toJSON());
         }
-        chatJSON[(*it).first] = msgArr;
+        chatJSON[(*it).key] = msgArr;
     }
     j["chats"] = chatJSON;
 
@@ -197,7 +197,7 @@ std::vector<Message> MessageSystem::searchMessages(const User &user, const std::
 
     for (auto it = chat.begin(); it != chat.end(); ++it)
     {
-        std::vector<Message> messages = (*it).second.toVector();
+        std::vector<Message> messages = (*it).value.toVector();
 
         for (const auto &msg : messages)
         {

@@ -46,7 +46,7 @@ public:
 class FriendRequestManager
 {
 private:
-        std::vector<FriendRequest> outbox;
+    std::vector<FriendRequest> outbox;
     std::vector<FriendRequest> inbox;
 
     std::string filePath;
@@ -55,10 +55,10 @@ public:
     FriendRequestManager(const std::string &filePath);
 
     bool sendRequest(unsigned long long sid, unsigned long long rid);
+    bool cancelRequest(unsigned long long rid);
 
     bool acceptRequest(unsigned long long sid);
     bool rejectRequest(unsigned long long sid);
-    bool cancelRequest(unsigned long long rid);
 
     std::vector<FriendRequest> getInbox() const;
     std::vector<FriendRequest> getOutbox() const;
