@@ -1,7 +1,6 @@
 #pragma once
 
 #include <vector>
-#include <functional>
 
 template <typename T>
 class LL
@@ -131,6 +130,30 @@ public:
     const_iterator end_iter() const { return const_iterator(nullptr); }
 };
 
+template <typename T>
+struct Hash
+{
+    size_t operator()(const T &key)
+    {
+        return (size_t)key;
+    }
+};
+
+template <>
+struct Hash<const char *>
+{
+    size_t operator()(const char *str) const
+    {
+        size_t h = 0;
+        while (*str)
+        {
+            h = h * 53 * (size_t)(*str);
+            str++;
+        }
+        return h;
+    }
+};
+
 template <typename K, typename V>
 class HashMap
 {
@@ -148,7 +171,12 @@ private:
 
     size_t hashKey(const K &key, size_t mod) const
     {
-        return std::hash<K>{}(key) % mod;
+        if (mod == 0)
+        {
+            return 0;
+        }
+
+        return Hash<K>{}(key) % mod;
     }
 
     void rehash()
@@ -179,10 +207,12 @@ public:
     HashMap(size_t cap = 20, float lf = 0.75)
         : currSize(0), loadFactorThreshold(lf)
     {
+        if (cap == 0)
+            cap = 1;
         buckets.resize(cap);
     }
 
-    bool insert(const K &key, const V &val)
+    Node *insert(const K &key, const V &val)
     {
         maybeRehash();
 
@@ -192,12 +222,12 @@ public:
         if (found)
         {
             found->value = val;
-            return false;
+            return found;
         }
 
-        buckets[index].insert(Node{key, val});
+        Node *newNode = buckets[index].insert(Node{key, val});
         currSize++;
-        return true;
+        return newNode;
     }
 
     bool remove(const K &key)
@@ -241,17 +271,9 @@ public:
             return found->value;
         }
 
-        buckets[index].insert(Node{key, V()});
+        found = buckets[index].insert(Node{key, V()});
         currSize++;
 
-        found = buckets[index].find(key);
-        return found->value;
-    }
-
-    const V &operator[](const K &key) const
-    {
-        size_t index = hashKey(key, buckets.size());
-        const Node *found = buckets[index].find(key);
         return found->value;
     }
 
@@ -320,6 +342,10 @@ public:
             return bucketIndex != other.bucketIndex ||
                    chainIter != other.chainIter;
         }
+        bool operator==(const iterator &other) const
+        {
+            return bucketIndex == other.bucketIndex && chainIter == other.chainIter;
+        }
 
         Node &operator*()
         {
@@ -380,6 +406,11 @@ public:
                    chainIter != other.chainIter;
         }
 
+        bool operator==(const const_iterator &other) const
+        {
+            return bucketIndex == other.bucketIndex && chainIter == other.chainIter;
+        }
+
         const Node &operator*() const
         {
             return *chainIter;
@@ -419,6 +450,24 @@ public:
         return iterator(&buckets, buckets.size());
     }
 
+    iterator find(const K &key)
+    {
+        size_t index = hashKey(key, buckets.size());
+        auto &chain = buckets[index];
+
+        for (auto it = chain.begin_iter(); it != chain.end_iter(); ++it)
+        {
+            if ((*it).key == key)
+            {
+                iterator mapIt(&buckets, index);
+                mapIt.chainIter = it;
+                mapIt.chainEnd = chain.end_iter();
+                return mapIt;
+            }
+        }
+        return end();
+    }
+
     const_iterator begin() const
     {
         return const_iterator(&buckets, 0);
@@ -427,5 +476,23 @@ public:
     const_iterator end() const
     {
         return const_iterator(&buckets, buckets.size());
+    }
+
+    const_iterator find(const K &key) const
+    {
+        size_t index = hashKey(key, buckets.size());
+        auto &chain = buckets[index];
+
+        for (auto it = chain.begin_iter(); it != chain.end_iter(); ++it)
+        {
+            if ((*it).key == key)
+            {
+                const_iterator mapIt(&buckets, index);
+                mapIt.chainIter = it;
+                mapIt.chainEnd = chain.end_iter();
+                return mapIt;
+            }
+        }
+        return end();
     }
 };
