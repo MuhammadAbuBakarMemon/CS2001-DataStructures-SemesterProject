@@ -5,7 +5,6 @@
 #include <string>
 #include "status.hpp"
 #include "core/followerList.hpp"
-using namespace std;
 
 unsigned long long User::nextUID = 10101;
 
@@ -208,7 +207,7 @@ void UserManagement :: displayAllUsers () const{
     User* curr;
 
     for (int i =  0; i < TABLE_SIZE ; i++){
-      curr == hashTable[i];
+      curr = hashTable[i];
 
       while (curr){
         curr -> display ();

@@ -7,7 +7,6 @@
 #include "core/user.hpp"
 #include "core/followerList.hpp"
 
-using namespace std;
 
 class RelationshipGraph
 {
