@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 #include "status.hpp"
-#include "core/followerlist.hpp"
+#include "core/followerList.hpp"
 using namespace std;
 
 unsigned long long User::nextUID = 10101;

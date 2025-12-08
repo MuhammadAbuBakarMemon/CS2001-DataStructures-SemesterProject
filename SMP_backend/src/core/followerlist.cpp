@@ -1,4 +1,4 @@
-#include "core/followerlist.hpp"
+#include "core/followerList.hpp"
 #include "core/user.hpp"
 
 

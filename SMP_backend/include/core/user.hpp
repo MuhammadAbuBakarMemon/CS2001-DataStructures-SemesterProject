@@ -13,6 +13,7 @@ using namespace std;
 // Algorithms: Hashing (for username lookup), Linear Search
 // =========================================================
 
+
 class User
 {
 private:
@@ -23,13 +24,13 @@ private:
     string city;
     string status;
     User *next;
-    FollowerSystem followerSystem;
 
     static unsigned long long nextUID;
 
 public:
     time_t lastLoginTime;
     time_t lastLogoutTime;
+    FollowerSystem followerSystem;
 
     User(const string &uname, const string &pwd, const string &cty);
 
@@ -51,6 +52,10 @@ public:
     bool verifyPassword(const string &input) const; // set to bool so other class can check if required
 
     void display() const;
+
+      //for grapgh
+    // Access follower system
+    FollowerSystem& getFollowerSystem() { return followerSystem; }
 };
 
 class UserManagement
@@ -88,8 +93,6 @@ public:
     bool deleteUser(const string &username);
     bool updateProfile(const string &username, const string newCity, const string newStatus);
 
-    //for grapgh
-    // Access follower system
-    FollowerSystem& getFollowerSystem() { return followerSystem; }
+  
 
 };

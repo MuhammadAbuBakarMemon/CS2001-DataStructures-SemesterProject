@@ -5,7 +5,7 @@
 #include <queue>
 #include <string>
 #include "core/user.hpp"
-#include "core/followerlist.hpp"
+#include "core/followerList.hpp"
 
 using namespace std;
 
