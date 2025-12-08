@@ -1,5 +1,4 @@
 #pragma once
-
 #include <iostream>
 #include "core/user.hpp"
 #include "ADT/linked_list.hpp"
@@ -52,3 +51,4 @@ public:
         cout << "--------------------------------\n";
     }
 };
+
