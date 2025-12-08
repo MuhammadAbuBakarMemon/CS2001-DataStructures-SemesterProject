@@ -45,4 +45,14 @@ struct Post {
             nextPostID = p.id + 1;
         }
         return p;
-stID = 1;
+    }
+
+    string getFormattedTime() const {
+        char buffer[80];
+        struct tm* timeinfo = localtime(&timestamp);
+        strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", timeinfo);
+        return string(buffer);
+    }
+};
+
+unsigned long long Post::nextPostID = 1;
