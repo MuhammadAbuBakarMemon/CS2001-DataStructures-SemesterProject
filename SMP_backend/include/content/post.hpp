@@ -1,5 +1,4 @@
 #pragma once
-
 #include <iostream>
 #include <string>
 #include <ctime>
@@ -56,3 +55,4 @@ struct Post {
 };
 
 unsigned long long Post::nextPostID = 1;
+
