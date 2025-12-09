@@ -1,10 +1,11 @@
 // make no changes to code im connecting the classes of status and user it require some work
 //will upload status as well 
-#include "user.hpp"
 #include <iostream>
 #include <string>
-#include "status.hpp"
-#include "core/followerList.hpp"
+#include "/home/mushaf-ali-mir/Documents/Github/Repos/CS2001-DataStructures-SemesterProject/SMP_backend/include/core/user.hpp"
+#include "/home/mushaf-ali-mir/Documents/Github/Repos/CS2001-DataStructures-SemesterProject/SMP_backend/include/core/followerList.hpp"
+#include "/home/mushaf-ali-mir/Documents/Github/Repos/CS2001-DataStructures-SemesterProject/SMP_backend/include/core/status.hpp"
+#include "/home/mushaf-ali-mir/Documents/Github/Repos/CS2001-DataStructures-SemesterProject/SMP_backend/include/core/relationGraph.hpp"
 
 unsigned long long User::nextUID = 10101;
 
@@ -89,11 +90,11 @@ void User::display() const
     }
 
 
-UserManagement :: UserManagement (){
-    for (int i = 0 ; i < TABLE_SIZE ; i++){
-        hashTable [i]= nullptr;
-    }
+UserManagement::UserManagement() {
+    for (int i = 0; i < TABLE_SIZE; i++)
+        hashTable[i] = nullptr;
 }
+
 
 UserManagement :: ~UserManagement (){
 
