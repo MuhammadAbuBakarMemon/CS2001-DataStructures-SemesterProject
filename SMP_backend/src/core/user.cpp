@@ -121,7 +121,7 @@ int UserManagement ::  hashFunction(const string &key) const{//following hashing
             hash = (hash * 31  +static_cast<unsigned int>(ch));//though static cast not required but AI recommended and was also a refresher of an PF subject so i used it, same for unsigned(which maybe be used for exception handling so hash can never be negative)
       }
 
-      return hash;
+     return hash % TABLE_SIZE;
 
 }
 

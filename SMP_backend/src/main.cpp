@@ -36,10 +36,11 @@ int main() {
         string password = line.substr(p1 + 1, p2 - (p1 + 1));
         string city     = line.substr(p2 + 1);
 
-       systemUser.registerUser(username,password,city);
+    //    systemUser.registerUser(username,password,city);
+       cout << username << endl;
     }
 
-    systemUser.displayAllUsers();
+    // systemUser.displayAllUsers();
 
     fin.close();
     return 0;
