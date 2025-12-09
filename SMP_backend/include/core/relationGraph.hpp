@@ -20,8 +20,6 @@ public:
 
     void BFS(User* startUser);
 
-    // DFS traversal 
-    void DFS(User* startUser);
 
     // --------------------- City Graph ---------------------
 
@@ -30,7 +28,5 @@ public:
     // Returns common city users
     vector<User*> getCommonCityUsers(User* user1, User* user2, const vector<User*>& allUsers);
 
-private:
-    
-    void DFS_Helper(User* user, set<unsigned long long>& visited);
+
 };

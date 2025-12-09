@@ -1,3 +1,4 @@
+#pragma once
 #include "core/followerList.hpp"
 #include "core/user.hpp"
 
@@ -7,7 +8,7 @@ void FollowerSystem::follow(User* self, User* target) {
 
     if (isFollowing(target)) return;
 
-    // Add to following list
+    // add to following 
     FollowNode* f = new FollowNode(target);
     f->next = followingHead;
     followingHead = f;

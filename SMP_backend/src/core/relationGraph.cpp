@@ -1,147 +1,146 @@
 #pragma once
 #include <iostream>
 #include <vector>
-#include <set>
 #include <queue>
 #include <string>
 #include "core/user.hpp"
 #include "core/followerList.hpp"
 
+using namespace std;
 
 class RelationshipGraph
 {
 public:
-    // --------------------- Mutual Friends ---------------------
-    static vector<User*> getMutualFriends(User* user1, User* user2)
+
+    // ----------------- CHECK IF USER EXIST IN VECTOR -----------------
+    static bool contains(const vector<User*>& vec, User* user)
     {
-        set<User*> user1Following;
+        for (User* u : vec)
+            if (u == user)
+                return true;
+        return false;
+    }
+
+    // ----------------- MUTUAL FRIENDS -----------------
+    static vector<User*> getMutualFriends(User* u1, User* u2)
+    {
         vector<User*> mutual;
+        vector<User*> u1Following;
 
-        // Collect user1's following
-        for (FollowNode* temp = user1->getFollowerSystem().getFollowingHead(); temp; temp = temp->next)
-            user1Following.insert(temp->user);
+        // store u1 following
+        for (FollowNode* t = u1->getFollowerSystem().getFollowingHead(); t; t = t->next)
+            u1Following.push_back(t->user);
 
-        // Compare with user2's following
-        for (FollowNode* temp = user2->getFollowerSystem().getFollowingHead(); temp; temp = temp->next)
-        {
-            if (user1Following.find(temp->user) != user1Following.end())
-                mutual.push_back(temp->user);
-        }
+        // compare with u2 following
+        for (FollowNode* t = u2->getFollowerSystem().getFollowingHead(); t; t = t->next)
+            if (contains(u1Following, t->user))
+                mutual.push_back(t->user);
 
         return mutual;
     }
 
-    // --------------------- BFS ---------------------
-    static void BFS(User* startUser)
+    // ----------------- BFS -----------------
+    static void BFS(User* start)
     {
-        if (!startUser) return;
-        set<User*> visited;
+        if (!start) return;
+
+        vector<User*> visited;
         queue<User*> q;
-        q.push(startUser);
-        visited.insert(startUser);
+
+        visited.push_back(start);
+        q.push(start);
+
+        cout << "BFS Start: " << start->getUsername() << endl;
 
         while (!q.empty())
         {
-            User* current = q.front(); q.pop();
-            cout << current->getUsername() << " ";
+            User* cur = q.front(); q.pop();
+            cout << cur->getUsername() << " ";
 
-            for (FollowNode* temp = current->getFollowerSystem().getFollowingHead(); temp; temp = temp->next)
+            for (FollowNode* t = cur->getFollowerSystem().getFollowingHead(); t; t = t->next)
             {
-                if (visited.find(temp->user) == visited.end())
+                if (!contains(visited, t->user))
                 {
-                    visited.insert(temp->user);
-                    q.push(temp->user);
+                    visited.push_back(t->user);
+                    q.push(t->user);
                 }
             }
         }
         cout << endl;
     }
 
-    // --------------------- DFS ---------------------
-    static void DFS(User* startUser)
-    {
-        set<User*> visited;
-        DFS_Helper(startUser, visited);
-        cout << endl;
-    }
-
-    // --------------------- City Graph ---------------------
+    // ----------------- USERS IN SAME CITY -----------------
     static vector<User*> getUsersInSameCity(const vector<User*>& allUsers, const string& city)
     {
-        vector<User*> sameCity;
-        for (auto u : allUsers)
+        vector<User*> result;
+        for (User* u : allUsers)
             if (u->getCity() == city)
-                sameCity.push_back(u);
-        return sameCity;
+                result.push_back(u);
+        return result;
     }
 
-    static vector<User*> getCommonCityUsers(User* user1, User* user2, const vector<User*>& allUsers)
+    // ----------------- PRINT CONNECTIONS -----------------
+    static void printConnections(User* u)
     {
-        vector<User*> commonCity;
-        for (auto u : allUsers)
-            if (u->getCity() == user1->getCity() && u->getCity() == user2->getCity())
-                commonCity.push_back(u);
-        return commonCity;
-    }
-
-    // --------------------- Social Helpers ---------------------
-    static int countFollowing(User* user)
-    {
-        int count = 0;
-        for (FollowNode* temp = user->getFollowerSystem().getFollowingHead(); temp; temp = temp->next)
-            count++;
-        return count;
-    }
-
-    static int countFollowers(User* target, const vector<User*>& allUsers)
-    {
-        int count = 0;
-        for (auto u : allUsers)
-            for (FollowNode* temp = u->getFollowerSystem().getFollowingHead(); temp; temp = temp->next)
-                if (temp->user == target) { count++; break; }
-        return count;
-    }
-
-    static vector<User*> suggestFriends(User* user, const vector<User*>& allUsers)
-    {
-        set<User*> yourFollowing;
-        vector<User*> suggestions;
-
-        for (FollowNode* temp = user->getFollowerSystem().getFollowingHead(); temp; temp = temp->next)
-            yourFollowing.insert(temp->user);
-
-        // Friends-of-friends
-        for (FollowNode* temp = user->getFollowerSystem().getFollowingHead(); temp; temp = temp->next)
-        {
-            User* friendNode = temp->user;
-            for (FollowNode* ftemp = friendNode->getFollowerSystem().getFollowingHead(); ftemp; ftemp = ftemp->next)
-            {
-                if (yourFollowing.find(ftemp->user) == yourFollowing.end() && ftemp->user != user)
-                {
-                    suggestions.push_back(ftemp->user);
-                    yourFollowing.insert(ftemp->user);
-                }
-            }
-        }
-        return suggestions;
-    }
-
-    static void printConnections(User* user)
-    {
-        cout << user->getUsername() << " follows: ";
-        for (FollowNode* temp = user->getFollowerSystem().getFollowingHead(); temp; temp = temp->next)
-            cout << temp->user->getUsername() << " ";
+        cout << u->getUsername() << " follows: ";
+        for (FollowNode* t = u->getFollowerSystem().getFollowingHead(); t; t = t->next)
+            cout << t->user->getUsername() << " ";
         cout << endl;
     }
 
-private:
-    static void DFS_Helper(User* user, set<User*>& visited)
-    {
-        if (!user || visited.find(user) != visited.end()) return;
-        visited.insert(user);
-        cout << user->getUsername() << " ";
+    // ============================================================
+    // ----------- ACTIVE USER GRAPH (status-based graph) ----------
+    // ============================================================
 
-        for (FollowNode* temp = user->getFollowerSystem().getFollowingHead(); temp; temp = temp->next)
-            DFS_Helper(temp->user, visited);
+    // Active graph nodes
+    static vector<User*> getActiveUsers(const vector<User*>& allUsers)
+    {
+        vector<User*> active;
+        for (User* u : allUsers)
+        {
+            // status stored in User class: "Online" / "Offline"
+            if (u->getStatus() == "Online")
+                active.push_back(u);
+        }
+        return active;
+    }
+
+    // Active graph edges (A follows B and both are active)
+    static vector<pair<User*, User*>> getActiveEdges(const vector<User*>& allUsers)
+    {
+        vector<pair<User*, User*>> edges;
+
+        for (User* u : allUsers)
+        {
+            if (u->getStatus() != "Online")
+                continue;
+
+            for (FollowNode* t = u->getFollowerSystem().getFollowingHead(); t; t = t->next)
+            {
+                if (t->user->getStatus() == "Online")
+                    edges.push_back({u, t->user});
+            }
+        }
+        return edges;
+    }
+
+    static void printActiveGraph(const vector<User*>& allUsers)
+    {
+        cout << "\nACTIVE USER GRAPH\n";
+
+        vector<User*> active = getActiveUsers(allUsers);
+
+        cout << "Active Users: ";
+        for (User* u : active)
+            cout << u->getUsername() << " ";
+        cout << endl;
+
+        cout << "Active Edges:\n";
+        vector<pair<User*, User*>> edges = getActiveEdges(allUsers);
+
+        for (auto& e : edges)
+            cout << e.first->getUsername() << " → " << e.second->getUsername() << endl;
+
+        cout << endl;
     }
 };

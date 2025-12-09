@@ -1,3 +1,4 @@
+#pragma once
 #include "core/status.hpp"
 #include "user.hpp"
 #include <iostream>
