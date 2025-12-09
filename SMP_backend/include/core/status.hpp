@@ -2,9 +2,12 @@
 
 #include <string>
 #include <ctime>
+#include "user.hpp"
+// #include "followerList.hpp"
+// #include "relationGraph.hpp"
 using namespace std;
 
-// Forward declare your User and UserManagement classes
+
 class User;
 class UserManagement;
 

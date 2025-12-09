@@ -1,36 +1,29 @@
-#pragma once
-#include "/home/mushaf-ali-mir/Documents/Github/Repos/CS2001-DataStructures-SemesterProject/SMP_backend/include/core/user.hpp"
-#include "/home/mushaf-ali-mir/Documents/Github/Repos/CS2001-DataStructures-SemesterProject/SMP_backend/include/core/followerList.hpp"
-#include "/home/mushaf-ali-mir/Documents/Github/Repos/CS2001-DataStructures-SemesterProject/SMP_backend/include/core/status.hpp"
-#include "/home/mushaf-ali-mir/Documents/Github/Repos/CS2001-DataStructures-SemesterProject/SMP_backend/include/core/relationGraph.hpp"
 
+#include "P:/Github/Repos/CS2001-DataStructures-SemesterProject/SMP_backend/include/core/followerList.hpp"
 
-void FollowerSystem::follow(User* self, User* target) {
-    if (!self || !target || self == target) return;
-
+// Follow a user
+void FollowerSystem::follow(const string& self, const string& target) {
+    if (self == target) return;
     if (isFollowing(target)) return;
 
-    // add to following 
+    // Add target to following list
     FollowNode* f = new FollowNode(target);
     f->next = followingHead;
     followingHead = f;
 
-    // Add self to target's followers list
+    // Add self to followers list
     FollowNode* t = new FollowNode(self);
-    t->next = target->followerSystem.followersHead;
-    target->followerSystem.followersHead = t;
+    t->next = followersHead;
+    followersHead = t;
 }
 
-// ------------------------------------------------------------
-void FollowerSystem::unfollow(User* self, User* target) {
-    if (!self || !target) return;
-
-    // Remove from following list
+// Unfollow a user
+void FollowerSystem::unfollow(const string& self, const string& target) {
+    // Remove from following
     FollowNode* prev = nullptr;
     FollowNode* curr = followingHead;
-
     while (curr) {
-        if (curr->user == target) {
+        if (curr->username == target) {
             if (prev) prev->next = curr->next;
             else followingHead = curr->next;
             delete curr;
@@ -40,14 +33,13 @@ void FollowerSystem::unfollow(User* self, User* target) {
         curr = curr->next;
     }
 
-    // Remove self from target's followers list
+    // Remove from followers
     prev = nullptr;
-    curr = target->followerSystem.followersHead;
-
+    curr = followersHead;
     while (curr) {
-        if (curr->user == self) {
+        if (curr->username == self) {
             if (prev) prev->next = curr->next;
-            else target->followerSystem.followersHead = curr->next;
+            else followersHead = curr->next;
             delete curr;
             break;
         }
@@ -56,33 +48,26 @@ void FollowerSystem::unfollow(User* self, User* target) {
     }
 }
 
-// ------------------------------------------------------------
-bool FollowerSystem::isFollowing(User* target) const {
-    FollowNode* curr = followingHead;
-    while (curr) {
-        if (curr->user == target) return true;
-        curr = curr->next;
-    }
+// Check following
+bool FollowerSystem::isFollowing(const string& target) const {
+    for (FollowNode* c = followingHead; c; c = c->next)
+        if (c->username == target) return true;
     return false;
 }
 
-
-bool FollowerSystem::isFollower(User* target) const {
-    FollowNode* curr = followersHead;
-    while (curr) {
-        if (curr->user == target) return true;
-        curr = curr->next;
-    }
+// Check follower
+bool FollowerSystem::isFollower(const string& target) const {
+    for (FollowNode* c = followersHead; c; c = c->next)
+        if (c->username == target) return true;
     return false;
 }
 
-// ------------------------------------------------------------
+// Count followers/following
 int FollowerSystem::totalFollowers() const {
     int count = 0;
     for (FollowNode* c = followersHead; c; c = c->next) count++;
     return count;
 }
-
 
 int FollowerSystem::totalFollowing() const {
     int count = 0;
@@ -90,36 +75,16 @@ int FollowerSystem::totalFollowing() const {
     return count;
 }
 
-// ------------------------------------------------------------
+// Display lists
 void FollowerSystem::displayFollowers() const {
     cout << "Followers:\n";
-    FollowNode* curr = followersHead;
-    while (curr) {
-        cout << " - " << curr->user->getUsername() << "\n";
-        curr = curr->next;
-    }
+    for (FollowNode* c = followersHead; c; c = c->next)
+        cout << " - " << c->username << "\n";
 }
-
 
 void FollowerSystem::displayFollowing() const {
     cout << "Following:\n";
-    FollowNode* curr = followingHead;
-    while (curr) {
-        cout << " - " << curr->user->getUsername() << "\n";
-        curr = curr->next;
-    }
+    for (FollowNode* c = followingHead; c; c = c->next)
+        cout << " - " << c->username << "\n";
 }
 
-
-void FollowerSystem::displayMutual(const FollowerSystem& other) const {
-    cout << "Mutual Connections:\n";
-
-    FollowNode* curr = followingHead;
-
-    while (curr) {
-        if (other.isFollowing(curr->user)) {
-            cout << " - " << curr->user->getUsername() << "\n";
-        }
-        curr = curr->next;
-    }
-}

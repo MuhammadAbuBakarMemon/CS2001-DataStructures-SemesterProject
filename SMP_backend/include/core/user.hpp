@@ -3,10 +3,8 @@
 #include <iostream>
 #include <string>
 #include <ctime>
-#include "/home/mushaf-ali-mir/Documents/Github/Repos/CS2001-DataStructures-SemesterProject/SMP_backend/include/core/user.hpp"
-#include "/home/mushaf-ali-mir/Documents/Github/Repos/CS2001-DataStructures-SemesterProject/SMP_backend/include/core/followerList.hpp"
-#include "/home/mushaf-ali-mir/Documents/Github/Repos/CS2001-DataStructures-SemesterProject/SMP_backend/include/core/status.hpp"
-#include "/home/mushaf-ali-mir/Documents/Github/Repos/CS2001-DataStructures-SemesterProject/SMP_backend/include/core/relationGraph.hpp"
+#include "followerList.hpp"
+
 
 using namespace std;
 
@@ -16,11 +14,11 @@ using namespace std;
 // Data Structures: Linked List, Hash Map
 // Algorithms: Hashing (for username lookup), Linear Search
 // =========================================================
-
-
+class FollowerSystem;
+class FollowNode;
 class User
 {
-private:
+public:
     unsigned long long u_id;
 
     string username;
@@ -28,13 +26,11 @@ private:
     string city;
     string status;
     User *next;
-
     static unsigned long long nextUID;
+    FollowerSystem followerSystem;
 
-public:
     time_t lastLoginTime;
     time_t lastLogoutTime;
-    FollowerSystem followerSystem;
 
     User(const string &uname, const string &pwd, const string &cty);
 
@@ -59,12 +55,12 @@ public:
 
       //for grapgh
     // Access follower system
-    FollowerSystem& getFollowerSystem() { return followerSystem; }
+    // FollowerSystem& getFollowerSystem() { return followerSystem; }
 };
 
 class UserManagement
 {
-private: // size taken large as the platform is for social media
+public: // size taken large as the platform is for social media
           // we are using seprate chaining for hasing which is convineent, as user can increasse
           // at abnormal rates thus latency can be high when alot of user try creating account 
           // so open adressing wil l fail
@@ -78,9 +74,8 @@ private: // size taken large as the platform is for social media
     int hashFunction(const string &username) const;
     User *searchUserInList(User *head, const string &username) const;
 
-public:
     UserManagement();
-    ~UserManagement();
+    // ~UserManagement();
 
     string getStatusforclass(const string& username)const;
     User* search (const string& username)const;

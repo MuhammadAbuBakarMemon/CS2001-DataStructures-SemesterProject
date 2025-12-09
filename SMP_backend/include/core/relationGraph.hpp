@@ -5,31 +5,29 @@
 #include <set>
 #include <queue>
 #include <string>
-#include "/home/mushaf-ali-mir/Documents/Github/Repos/CS2001-DataStructures-SemesterProject/SMP_backend/include/core/user.hpp"
-#include "/home/mushaf-ali-mir/Documents/Github/Repos/CS2001-DataStructures-SemesterProject/SMP_backend/include/core/followerList.hpp"
-#include "/home/mushaf-ali-mir/Documents/Github/Repos/CS2001-DataStructures-SemesterProject/SMP_backend/include/core/status.hpp"
-#include "/home/mushaf-ali-mir/Documents/Github/Repos/CS2001-DataStructures-SemesterProject/SMP_backend/include/core/relationGraph.hpp"
+#include "user.hpp"
+#include "followerList.hpp"
 
 using namespace std;
 
-
-class RelationshipGraph
-{
+class RelationshipGraph {
 public:
+
     // --------------------- Mutual Friends Graph ---------------------
+    // Returns vector of mutual friends (common usernames converted to User* via allUsers map)
+    vector<User*> getMutualFriends(User* user1, User* user2, const vector<User*>& allUsers);
 
-    vector<User*> getMutualFriends(User* user1, User* user2);
-
-
-    void BFS(User* startUser);
-
+    // Simple BFS starting from a user (prints usernames)
+    void BFS(User* startUser, const vector<User*>& allUsers);
 
     // --------------------- City Graph ---------------------
-
+    // Returns users in the same city as given city
     vector<User*> getUsersInSameCity(const vector<User*>& allUsers, const string& city);
 
-    // Returns common city users
+    // Returns users in same city as both user1 and user2 (intersection)
     vector<User*> getCommonCityUsers(User* user1, User* user2, const vector<User*>& allUsers);
 
-
+private:
+    // Helper: find User* by username from allUsers vector
+    User* findUserByUsername(const vector<User*>& allUsers, const string& username) const;
 };
